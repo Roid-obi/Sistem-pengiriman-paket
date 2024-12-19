@@ -1,18 +1,18 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// Paket barang untuk diantar kurir (ubah status pengantaran)
-
 // Kelas PaketBarang untuk menyimpan data paket yang dikirim
 class PaketBarang {
-    String idPaket;
+    int idPaket;
+    String nomorResi;
     String namaPengirim;
     String namaPenerima;
     String alamatPenerima;
     String statusPengantaran;
 
-    public PaketBarang(String idPaket, String namaPengirim, String namaPenerima, String alamatPenerima, String statusPengantaran) {
+    public PaketBarang(int idPaket, String nomorResi, String namaPengirim, String namaPenerima, String alamatPenerima, String statusPengantaran) {
         this.idPaket = idPaket;
+        this.nomorResi = nomorResi;
         this.namaPengirim = namaPengirim;
         this.namaPenerima = namaPenerima;
         this.alamatPenerima = alamatPenerima;
@@ -29,10 +29,11 @@ class PaketBarang {
 public class SistemPaketPengantaran {
     static ArrayList<PaketBarang> daftarPaket = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
+    static int idCounter = 1;
 
     public static void main(String[] args) {
         // Menambahkan paket dummy saat program dimulai
-        DataPaket();
+        dataPaket();
 
         int pilihan;
         do {
@@ -67,10 +68,10 @@ public class SistemPaketPengantaran {
     }
 
     // Data dummy paket
-    public static void DataPaket() {
-        daftarPaket.add(new PaketBarang("P001", "Kurumi", "Alice", "Jl. Mawar No. 1", "Pending"));
-        daftarPaket.add(new PaketBarang("P002", "Must a nine", "Bob", "Jl. Melati No. 2", "On Delivery"));
-        daftarPaket.add(new PaketBarang("P003", "Sigma Boy", "Charlie", "Jl. Anggrek No. 3", "Delivered"));
+    public static void dataPaket() {
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Kurumi", "Alice", "Jl. Mawar No. 1", "Pending"));
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Must a nine", "Bob", "Jl. Melati No. 2", "On Delivery"));
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Sigma Boy", "Charlie", "Jl. Anggrek No. 3", "Delivered"));
     }
 
     // Menampilkan antarmuka pengguna (UI) untuk memilih menu
@@ -89,16 +90,6 @@ public class SistemPaketPengantaran {
 
     // Fungsi untuk menambah paket baru
     public static void tambahPaket() {
-        System.out.print("Masukkan ID Paket: ");
-        String id = scanner.nextLine();
-
-        // Validasi ID unik
-        while (isIdExist(id)) {
-            System.out.println("ID Paket sudah ada. Masukkan ID yang berbeda.");
-            System.out.print("Masukkan ID Paket: ");
-            id = scanner.nextLine();
-        }
-
         System.out.print("Masukkan Nama Pengirim: ");
         String pengirim = scanner.nextLine();
         System.out.print("Masukkan Nama Penerima: ");
@@ -108,10 +99,76 @@ public class SistemPaketPengantaran {
 
         // Status otomatis diatur menjadi "Pending"
         String status = "Pending";
+        String nomorResi = generateNomorResi();
 
-        PaketBarang paket = new PaketBarang(id, pengirim, penerima, alamat, status);
+        PaketBarang paket = new PaketBarang(idCounter++, nomorResi, pengirim, penerima, alamat, status);
         daftarPaket.add(paket);
-        System.out.println("\nPaket berhasil ditambahkan.");
+        System.out.println("\nPaket berhasil ditambahkan dengan nomor resi " + nomorResi + ".");
+    }
+
+    // Fungsi untuk menghasilkan nomor resi unik
+    public static String generateNomorResi() {
+        return "RESI" + System.currentTimeMillis();
+    }
+
+    // Fungsi untuk menghapus paket berdasarkan ID
+    public static void hapusPaket() {
+        System.out.print("Masukkan ID Paket yang ingin dihapus: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
+        boolean ditemukan = false;
+
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.idPaket == id) {
+                daftarPaket.remove(paket);
+                System.out.println("\nPaket dengan ID " + id + " berhasil dihapus.");
+                ditemukan = true;
+                break;
+            }
+        }
+
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
+        }
+    }
+
+    // Fungsi untuk menampilkan semua paket yang ada
+    public static void tampilSemuaPaket() {
+        if (daftarPaket.isEmpty()) {
+            System.out.println("\nTidak ada data paket.");
+        } else {
+            System.out.println("\n+============================================================================================================+");
+            System.out.println("| ID Paket | Nomor Resi        | Pengirim         | Penerima         | Alamat Penerima       | Status        |");
+            System.out.println("+============================================================================================================+");
+            for (PaketBarang paket : daftarPaket) {
+                System.out.printf("| %-9d| %-18s| %-17s| %-17s| %-22s| %-14s|%n",
+                        paket.idPaket, paket.nomorResi, paket.namaPengirim, paket.namaPenerima, paket.alamatPenerima, paket.statusPengantaran);
+            }
+            System.out.println("+============================================================================================================+");
+        }
+    }
+
+    // Fungsi untuk memperbarui status paket berdasarkan ID
+    public static void updateStatusPaket() {
+        System.out.print("Masukkan ID Paket yang ingin diubah statusnya: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
+        boolean ditemukan = false;
+
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.idPaket == id) {
+                System.out.println("\nPilih Status Pengantaran yang baru:");
+                String statusBaru = pilihStatusPengantaran();
+                paket.updateStatus(statusBaru);
+                System.out.println("\nStatus paket dengan ID " + id + " berhasil diperbarui menjadi " + statusBaru + ".");
+                ditemukan = true;
+                break;
+            }
+        }
+
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
+        }
     }
 
     // Fungsi untuk memilih status pengantaran paket
@@ -138,74 +195,18 @@ public class SistemPaketPengantaran {
         }
     }
 
-    // Fungsi untuk menghapus paket berdasarkan ID
-    public static void hapusPaket() {
-        System.out.print("Masukkan ID Paket yang ingin dihapus: ");
-        String id = scanner.nextLine();
-        boolean ditemukan = false;
-
-        for (PaketBarang paket : daftarPaket) {
-            if (paket.idPaket.equals(id)) {
-                daftarPaket.remove(paket);
-                System.out.println("\nPaket dengan ID " + id + " berhasil dihapus.");
-                ditemukan = true;
-                break;
-            }
-        }
-
-        if (!ditemukan) {
-            System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
-        }
-    }
-
-    // Fungsi untuk menampilkan semua paket yang ada
-    public static void tampilSemuaPaket() {
-        if (daftarPaket.isEmpty()) {
-            System.out.println("\nTidak ada data paket.");
-        } else {
-            System.out.println("\n+=========================================================================================+");
-            System.out.println("| ID Paket  | Pengirim         | Penerima         | Alamat Penerima       | Status        |");
-            System.out.println("+=========================================================================================+");
-            for (PaketBarang paket : daftarPaket) {
-                System.out.printf("| %-10s| %-17s| %-17s| %-22s| %-14s|%n",
-                        paket.idPaket, paket.namaPengirim, paket.namaPenerima, paket.alamatPenerima, paket.statusPengantaran);
-            }
-            System.out.println("+=========================================================================================+");
-        }
-    }
-
-    // Fungsi untuk memperbarui status paket berdasarkan ID
-    public static void updateStatusPaket() {
-        System.out.print("Masukkan ID Paket yang ingin diubah statusnya: ");
-        String id = scanner.nextLine();
-        boolean ditemukan = false;
-
-        for (PaketBarang paket : daftarPaket) {
-            if (paket.idPaket.equals(id)) {
-                System.out.println("\nPilih Status Pengantaran yang baru:");
-                String statusBaru = pilihStatusPengantaran();
-                paket.updateStatus(statusBaru);
-                System.out.println("\nStatus paket dengan ID " + id + " berhasil diperbarui menjadi " + statusBaru + ".");
-                ditemukan = true;
-                break;
-            }
-        }
-
-        if (!ditemukan) {
-            System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
-        }
-    }
-
     // Fungsi untuk mencari paket berdasarkan ID
     public static void cariPaket() {
         System.out.print("Masukkan ID Paket yang ingin dicari: ");
-        String id = scanner.nextLine();
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
         boolean ditemukan = false;
 
         for (PaketBarang paket : daftarPaket) {
-            if (paket.idPaket.equals(id)) {
+            if (paket.idPaket == id) {
                 System.out.println("\nDetail Paket:");
                 System.out.println("ID Paket         : " + paket.idPaket);
+                System.out.println("Nomor Resi       : " + paket.nomorResi);
                 System.out.println("Nama Pengirim    : " + paket.namaPengirim);
                 System.out.println("Nama Penerima    : " + paket.namaPenerima);
                 System.out.println("Alamat Penerima  : " + paket.alamatPenerima);
@@ -218,15 +219,5 @@ public class SistemPaketPengantaran {
         if (!ditemukan) {
             System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
         }
-    }
-
-    // Fungsi untuk memeriksa apakah ID paket sudah ada
-    public static boolean isIdExist(String id) {
-        for (PaketBarang paket : daftarPaket) {
-            if (paket.idPaket.equals(id)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
