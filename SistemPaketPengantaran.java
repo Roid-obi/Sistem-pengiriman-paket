@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 // Kelas PaketBarang untuk menyimpan data paket yang dikirim
@@ -64,6 +66,9 @@ public class SistemPaketPengantaran {
                 case 5:
                     cariPaket();
                     break;
+                case 6:
+                    urutkanPaket();
+                    break;
                 case 0:
                     System.out.println("Keluar dari program.");
                     break;
@@ -90,6 +95,7 @@ public class SistemPaketPengantaran {
         System.out.println("| 3. Tampilkan Semua Paket               |");
         System.out.println("| 4. Update Status Paket                 |");
         System.out.println("| 5. Cari Paket                          |");
+        System.out.println("| 6. Urutkan Paket berdasarkan ID Paket  |");
         System.out.println("| 0. Keluar                              |");
         System.out.println("+========================================+");
     }
@@ -234,29 +240,190 @@ public class SistemPaketPengantaran {
         }
     }
 
-    // Fungsi untuk mencari paket berdasarkan ID
-    public static void cariPaket() {
-        System.out.print("Masukkan ID Paket yang ingin dicari: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Clear buffer
-        boolean ditemukan = false;
+    // PENCARIAN DATA
 
-        for (PaketBarang paket : daftarPaket) {
-            if (paket.idPaket == id) {
-                System.out.println("\nDetail Paket:");
-                System.out.println("ID Paket         : " + paket.idPaket);
-                System.out.println("Nomor Resi       : " + paket.nomorResi);
-                System.out.println("Nama Pengirim    : " + paket.namaPengirim);
-                System.out.println("Nama Penerima    : " + paket.namaPenerima);
-                System.out.println("Alamat Penerima  : " + paket.alamatPenerima);
-                System.out.println("Status Pengantaran: " + paket.statusPengantaran);
-                ditemukan = true;
+    // Fungsi untuk mencari paket berdasarkan berbagai kriteria
+    public static void cariPaket() {
+        System.out.println("Ingin mencari berdasarkan apa?");
+        System.out.println("1. ID Paket");
+        System.out.println("2. Nomor Resi");
+        System.out.println("3. Nama Pengirim");
+        System.out.println("4. Nama Penerima");
+        System.out.println("5. Alamat Penerima");
+        System.out.println("6. Status Pengantaran");
+        System.out.println("7. Kurir");
+        System.out.print("Pilihan: ");
+
+        int pilihan = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
+
+        switch (pilihan) {
+            case 1:
+                System.out.print("Masukkan ID Paket: ");
+                int id = scanner.nextInt();
+                scanner.nextLine();
+                cariPaketById(id);
                 break;
+            case 2:
+                System.out.print("Masukkan Nomor Resi: ");
+                String resi = scanner.nextLine();
+                cariPaketByNomorResi(resi);
+                break;
+            case 3:
+                System.out.print("Masukkan Nama Pengirim: ");
+                String pengirim = scanner.nextLine();
+                cariPaketByPengirim(pengirim);
+                break;
+            case 4:
+                System.out.print("Masukkan Nama Penerima: ");
+                String penerima = scanner.nextLine();
+                cariPaketByPenerima(penerima);
+                break;
+            case 5:
+                System.out.print("Masukkan Alamat Penerima: ");
+                String alamat = scanner.nextLine();
+                cariPaketByAlamat(alamat);
+                break;
+            case 6:
+                String status = pilihStatusPengantaran();
+                cariPaketByStatus(status);
+                break;
+            case 7:
+                String kurir = pilihKurir();
+                cariPaketByKurir(kurir);
+                break;
+            default:
+                System.out.println("Pilihan tidak valid.");
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan ID Paket
+    public static void cariPaketById(int id) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (String.valueOf(paket.idPaket).startsWith(String.valueOf(id))) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
             }
         }
-
         if (!ditemukan) {
             System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
         }
     }
+
+    // Fungsi untuk mencari berdasarkan Nomor Resi
+    public static void cariPaketByNomorResi(String resi) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.nomorResi.startsWith(resi)) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan Nomor Resi " + resi + " tidak ditemukan.");
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan Nama Pengirim
+    public static void cariPaketByPengirim(String pengirim) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.namaPengirim.toLowerCase().startsWith(pengirim.toLowerCase())) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan Nama Pengirim " + pengirim + " tidak ditemukan.");
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan Nama Penerima
+    public static void cariPaketByPenerima(String penerima) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.namaPenerima.toLowerCase().startsWith(penerima.toLowerCase())) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan Nama Penerima " + penerima + " tidak ditemukan.");
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan Alamat Penerima
+    public static void cariPaketByAlamat(String alamat) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.alamatPenerima.toLowerCase().startsWith(alamat.toLowerCase())) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nPaket dengan Alamat Penerima " + alamat + " tidak ditemukan.");
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan Status Pengantaran
+    public static void cariPaketByStatus(String status) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.statusPengantaran.equalsIgnoreCase(status)) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nTidak ada paket dengan status pengantaran: " + status);
+        }
+    }
+
+    // Fungsi untuk mencari berdasarkan Kurir
+    public static void cariPaketByKurir(String kurir) {
+        boolean ditemukan = false;
+        for (PaketBarang paket : daftarPaket) {
+            if (paket.kurir.equalsIgnoreCase(kurir)) {
+                tampilkanDetailPaket(paket);
+                ditemukan = true;
+            }
+        }
+        if (!ditemukan) {
+            System.out.println("\nTidak ada paket dengan kurir: " + kurir);
+        }
+    }
+
+    // Fungsi untuk menampilkan detail paket dalam bentuk tabel
+    public static void tampilkanDetailPaket(PaketBarang paket) {
+        System.out.println("\n+===========================================================================================================================+");
+        System.out.println("| ID Paket | Nomor Resi        | Pengirim         | Penerima         | Alamat Penerima       | Status        | Kurir        |");
+        System.out.println("+===========================================================================================================================+");
+        System.out.printf("| %-9d| %-18s| %-17s| %-17s| %-22s| %-14s| %-13s|%n",
+                paket.idPaket, paket.nomorResi, paket.namaPengirim, paket.namaPenerima, paket.alamatPenerima, paket.statusPengantaran, paket.kurir);
+        System.out.println("+===========================================================================================================================+");
+    }
+
+    // Fungsi untuk mengurutkan paket berdasarkan ID
+    public static void urutkanPaket() {
+        System.out.print("Urutkan berdasarkan ID Paket (1: Kecil ke Besar, 2: Besar ke Kecil): ");
+        int pilihan = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
+
+        if (pilihan == 1) {
+            // Urutkan kecil ke besar
+            Collections.sort(daftarPaket, Comparator.comparingInt(paket -> paket.idPaket));
+            System.out.println("\nData paket diurutkan dari ID terkecil ke terbesar.");
+        } else if (pilihan == 2) {
+            // Urutkan besar ke kecil
+            Collections.sort(daftarPaket, (p1, p2) -> Integer.compare(p2.idPaket, p1.idPaket));
+            System.out.println("\nData paket diurutkan dari ID terbesar ke terkecil.");
+        } else {
+            System.out.println("\nPilihan tidak valid.");
+            return;
+        }
+        tampilSemuaPaket();
+    }
+
 }
