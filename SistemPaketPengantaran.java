@@ -9,21 +9,27 @@ class PaketBarang {
     String namaPenerima;
     String alamatPenerima;
     String statusPengantaran;
+    String kurir; // Tambahkan atribut kurir
 
-    public PaketBarang(int idPaket, String nomorResi, String namaPengirim, String namaPenerima, String alamatPenerima, String statusPengantaran) {
+    public PaketBarang(int idPaket, String nomorResi, String namaPengirim, String namaPenerima, String alamatPenerima, String statusPengantaran, String kurir) {
         this.idPaket = idPaket;
         this.nomorResi = nomorResi;
         this.namaPengirim = namaPengirim;
         this.namaPenerima = namaPenerima;
         this.alamatPenerima = alamatPenerima;
         this.statusPengantaran = statusPengantaran;
+        this.kurir = kurir; // Inisialisasi atribut kurir
     }
 
-    // Fungsi untuk mengubah status pengantaran paket
     public void updateStatus(String status) {
         this.statusPengantaran = status;
     }
+
+    public void setKurir(String kurir) {
+        this.kurir = kurir;
+    }
 }
+
 
 // Kelas Sistem Paket Pengantaran
 public class SistemPaketPengantaran {
@@ -69,9 +75,9 @@ public class SistemPaketPengantaran {
 
     // Data dummy paket
     public static void dataPaket() {
-        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Kurumi", "Alice", "Jl. Mawar No. 1", "Pending"));
-        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Must a nine", "Bob", "Jl. Melati No. 2", "On Delivery"));
-        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Sigma Boy", "Charlie", "Jl. Anggrek No. 3", "Delivered"));
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Kurumi", "Alice", "Jl. Mawar No. 1", "Pending", "-"));
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Must a nine", "Bob", "Jl. Melati No. 2", "On Delivery", "J&T Express"));
+        daftarPaket.add(new PaketBarang(idCounter++, generateNomorResi(), "Sigma Boy", "Charlie", "Jl. Anggrek No. 3", "Delivered", "-"));
     }
 
     // Menampilkan antarmuka pengguna (UI) untuk memilih menu
@@ -100,8 +106,9 @@ public class SistemPaketPengantaran {
         // Status otomatis diatur menjadi "Pending"
         String status = "Pending";
         String nomorResi = generateNomorResi();
+        String kurir = "-";
 
-        PaketBarang paket = new PaketBarang(idCounter++, nomorResi, pengirim, penerima, alamat, status);
+        PaketBarang paket = new PaketBarang(idCounter++, nomorResi, pengirim, penerima, alamat, status, kurir);
         daftarPaket.add(paket);
         System.out.println("\nPaket berhasil ditambahkan dengan nomor resi " + nomorResi + ".");
     }
@@ -137,14 +144,14 @@ public class SistemPaketPengantaran {
         if (daftarPaket.isEmpty()) {
             System.out.println("\nTidak ada data paket.");
         } else {
-            System.out.println("\n+============================================================================================================+");
-            System.out.println("| ID Paket | Nomor Resi        | Pengirim         | Penerima         | Alamat Penerima       | Status        |");
-            System.out.println("+============================================================================================================+");
+            System.out.println("\n+===========================================================================================================================+");
+            System.out.println("| ID Paket | Nomor Resi        | Pengirim         | Penerima         | Alamat Penerima       | Status        | Kurir        |");
+            System.out.println("+===========================================================================================================================+");
             for (PaketBarang paket : daftarPaket) {
-                System.out.printf("| %-9d| %-18s| %-17s| %-17s| %-22s| %-14s|%n",
-                        paket.idPaket, paket.nomorResi, paket.namaPengirim, paket.namaPenerima, paket.alamatPenerima, paket.statusPengantaran);
+                System.out.printf("| %-9d| %-18s| %-17s| %-17s| %-22s| %-14s| %-13s|%n",
+                        paket.idPaket, paket.nomorResi, paket.namaPengirim, paket.namaPenerima, paket.alamatPenerima, paket.statusPengantaran, paket.kurir);
             }
-            System.out.println("+============================================================================================================+");
+            System.out.println("+===========================================================================================================================+");
         }
     }
 
@@ -154,22 +161,54 @@ public class SistemPaketPengantaran {
         int id = scanner.nextInt();
         scanner.nextLine(); // Clear buffer
         boolean ditemukan = false;
-
+    
         for (PaketBarang paket : daftarPaket) {
             if (paket.idPaket == id) {
                 System.out.println("\nPilih Status Pengantaran yang baru:");
                 String statusBaru = pilihStatusPengantaran();
                 paket.updateStatus(statusBaru);
+    
+                if (statusBaru.equals("On Delivery")) {
+                    System.out.println("\nPilih Kurir:");
+                    String kurirBaru = pilihKurir();
+                    paket.setKurir(kurirBaru);
+                } else {
+                    paket.setKurir("-"); // Kurir diatur ke "-" jika bukan On Delivery
+                }
+    
                 System.out.println("\nStatus paket dengan ID " + id + " berhasil diperbarui menjadi " + statusBaru + ".");
                 ditemukan = true;
                 break;
             }
         }
-
+    
         if (!ditemukan) {
             System.out.println("\nPaket dengan ID " + id + " tidak ditemukan.");
         }
     }
+
+    public static String pilihKurir() {
+        System.out.println("1. JNE Express");
+        System.out.println("2. J&T Express");
+        System.out.println("3. Ninja Xpress");
+        System.out.print("Pilihan: ");
+    
+        int pilihan = scanner.nextInt();
+        scanner.nextLine(); // Clear buffer
+    
+        switch (pilihan) {
+            case 1:
+                return "JNE Express";
+            case 2:
+                return "J&T Express";
+            case 3:
+                return "Ninja Xpress";
+            default:
+                System.out.println("Pilihan tidak valid. Kurir diatur ke 'JNE Express'.");
+                return "JNE Express";
+        }
+    }    
+
 
     // Fungsi untuk memilih status pengantaran paket
     public static String pilihStatusPengantaran() {
