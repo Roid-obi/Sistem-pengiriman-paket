@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Kurir {
+class RaKurir {
     private int kurirId;
     private String namaKurir;
 
-    public Kurir(int kurirId, String namaKurir) {
+    public RaKurir(int kurirId, String namaKurir) {
         this.kurirId = kurirId;
         this.namaKurir = namaKurir;
     }
@@ -24,16 +24,16 @@ class Kurir {
     }
 }
 
-class Paket {
+class RaPaket {
     private static int counterPaket = 1;
     private int paketId;
     private String nomorResi;
     private String namaPenerima;
     private String alamatPenerima;
     private String status;
-    private Kurir kurir;
+    private RaKurir kurir;
 
-    public Paket(String nomorResi, String namaPenerima, String alamatPenerima) {
+    public RaPaket(String nomorResi, String namaPenerima, String alamatPenerima) {
         this.paketId = counterPaket++;
         this.nomorResi = nomorResi;
         this.namaPenerima = namaPenerima;
@@ -66,11 +66,11 @@ class Paket {
         this.status = status;
     }
 
-    public Kurir getKurir() {
+    public RaKurir getKurir() {
         return kurir;
     }
 
-    public void setKurir(Kurir kurir) {
+    public void setKurir(RaKurir kurir) {
         this.kurir = kurir;
     }
 
@@ -88,21 +88,21 @@ class Paket {
 }
 
 public class ManajemenPaketKurir {
-    private static ArrayList<Paket> daftarPaket = new ArrayList<>();
-    private static ArrayList<Kurir> daftarKurir = new ArrayList<>();
+    private static ArrayList<RaPaket> daftarPaket = new ArrayList<>();
+    private static ArrayList<RaKurir> daftarKurir = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
-        daftarKurir.add(new Kurir(1, "JNE"));
-        daftarKurir.add(new Kurir(2, "JNT"));
-        daftarKurir.add(new Kurir(3, "FAST"));
+        daftarKurir.add(new RaKurir(1, "JNE"));
+        daftarKurir.add(new RaKurir(2, "JNT"));
+        daftarKurir.add(new RaKurir(3, "FAST"));
 
-        daftarPaket.add(new Paket("101010", "Ahmad", "Semarang"));
-        daftarPaket.add(new Paket("202020", "Budi", "Jakarta"));
-        daftarPaket.add(new Paket("303030", "Citra", "Surabaya"));
-        daftarPaket.add(new Paket("101011", "Ahmad", "Solo"));
-        daftarPaket.add(new Paket("212121", "joko", "semarang"));
+        daftarPaket.add(new RaPaket("101010", "Ahmad", "Semarang"));
+        daftarPaket.add(new RaPaket("202020", "Budi", "Jakarta"));
+        daftarPaket.add(new RaPaket("303030", "Citra", "Surabaya"));
+        daftarPaket.add(new RaPaket("101011", "Ahmad", "Solo"));
+        daftarPaket.add(new RaPaket("212121", "joko", "semarang"));
 
         boolean keluar = false;
 
@@ -164,7 +164,7 @@ public class ManajemenPaketKurir {
         System.out.print("Masukkan Alamat Penerima : ");
         String alamatPenerima = scanner.nextLine();
 
-        Paket paketBaru = new Paket(nomorResi, namaPenerima, alamatPenerima);
+        RaPaket paketBaru = new RaPaket(nomorResi, namaPenerima, alamatPenerima);
         daftarPaket.add(paketBaru);
         System.out.println("Paket berhasil ditambahkan!");
     }
@@ -195,7 +195,7 @@ public class ManajemenPaketKurir {
         }
 
         System.out.println("\n----- Daftar Paket -----");
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             System.out.println(paket);
         }
     }
@@ -209,7 +209,7 @@ public class ManajemenPaketKurir {
         System.out.print("Masukkan Nomor Resi paket yang akan diubah statusnya : ");
         String nomorResi = scanner.nextLine();
 
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             if (paket.getNomorResi().equals(nomorResi)) {
                 System.out.println("Status saat ini : " + paket.getStatus());
                 System.out.println("Pilih Status Baru :");
@@ -246,9 +246,9 @@ public class ManajemenPaketKurir {
         System.out.println("Paket dengan nomor resi tersebut tidak ditemukan");
     }
 
-    private static void pilihKurir(Paket paket) {
+    private static void pilihKurir(RaPaket paket) {
         System.out.println("Pilih Kurir:");
-        for (Kurir kurir : daftarKurir) {
+        for (RaKurir kurir : daftarKurir) {
             System.out.println(kurir.getKurirId() + ". " + kurir.getNamaKurir());
         }
         System.out.print("Masukkan pilihan kurir : ");
@@ -256,7 +256,7 @@ public class ManajemenPaketKurir {
         int kurirPilihan = scanner.nextInt();
         scanner.nextLine();
 
-        for (Kurir kurir : daftarKurir) {
+        for (RaKurir kurir : daftarKurir) {
             if (kurir.getKurirId() == kurirPilihan) {
                 paket.setKurir(kurir);
                 return;
@@ -307,7 +307,7 @@ public class ManajemenPaketKurir {
 
     private static void pilihKurirUntukPencarian() {
         System.out.println("Pilih Kurir:");
-        for (Kurir kurir : daftarKurir) {
+        for (RaKurir kurir : daftarKurir) {
             System.out.println(kurir.getKurirId() + ". " + kurir.getNamaKurir());
         }
         System.out.print("Masukkan pilihan kurir : ");
@@ -315,7 +315,7 @@ public class ManajemenPaketKurir {
         int kurirPilihan = scanner.nextInt();
         scanner.nextLine();
 
-        for (Kurir kurir : daftarKurir) {
+        for (RaKurir kurir : daftarKurir) {
             if (kurir.getKurirId() == kurirPilihan) {
                 cariPaketByKurir(kurir.getNamaKurir());
                 return;
@@ -325,7 +325,7 @@ public class ManajemenPaketKurir {
     }
 
     private static void cariPaketByResi(String nomorResi) {
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             if (paket.getNomorResi().equals(nomorResi)) {
                 System.out.println("Paket ditemukan :");
                 System.out.println(paket);
@@ -337,7 +337,7 @@ public class ManajemenPaketKurir {
 
     private static void cariPaketByNama(String namaPenerima) {
         boolean ditemukan = false;
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             if (paket.getNamaPenerima().toLowerCase().contains(namaPenerima.toLowerCase())) {
                 System.out.println(paket);
                 ditemukan = true;
@@ -351,7 +351,7 @@ public class ManajemenPaketKurir {
 
     private static void cariPaketByAlamat(String alamatPenerima) {
         boolean ditemukan = false;
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             if (paket.getAlamatPenerima().toLowerCase().contains(alamatPenerima.toLowerCase())) {
                 System.out.println(paket);
                 ditemukan = true;
@@ -365,7 +365,7 @@ public class ManajemenPaketKurir {
 
     private static void cariPaketByKurir(String namaKurir) {
         boolean ditemukan = false;
-        for (Paket paket : daftarPaket) {
+        for (RaPaket paket : daftarPaket) {
             if (paket.getKurir() != null &&
                     paket.getKurir().getNamaKurir().toLowerCase().contains(namaKurir.toLowerCase())) {
                 System.out.println(paket);
