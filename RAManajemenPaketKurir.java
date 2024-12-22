@@ -87,7 +87,7 @@ class RaPaket {
     }
 }
 
-public class ManajemenPaketKurir {
+public class RAManajemenPaketKurir {
     private static ArrayList<RaPaket> daftarPaket = new ArrayList<>();
     private static ArrayList<RaKurir> daftarKurir = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
