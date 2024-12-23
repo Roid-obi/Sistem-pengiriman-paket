@@ -87,7 +87,7 @@ public class SistemPaketPengantaran {
 
     // Menampilkan antarmuka pengguna (UI) untuk memilih menu
     public static void tampilkanUI() {
-        System.out.println("+========================================+");
+        System.out.println("\n+========================================+");
         System.out.println("|         Sistem Paket Pengantaran       |");
         System.out.println("+========================================+");
         System.out.println("| 1. Tambah Paket                        |");
@@ -252,6 +252,7 @@ public class SistemPaketPengantaran {
         System.out.println("5. Alamat Penerima");
         System.out.println("6. Status Pengantaran");
         System.out.println("7. Kurir");
+        System.out.println("8. Kembali");
         System.out.print("Pilihan: ");
 
         int pilihan = scanner.nextInt();
@@ -291,6 +292,9 @@ public class SistemPaketPengantaran {
             case 7:
                 String kurir = pilihKurir();
                 cariPaketByKurir(kurir);
+                break;
+            case 8:
+                main(null);
                 break;
             default:
                 System.out.println("Pilihan tidak valid.");
