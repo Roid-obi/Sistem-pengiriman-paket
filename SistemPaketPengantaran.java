@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 
 // Kelas PaketBarang untuk menyimpan data paket yang dikirim
@@ -414,10 +413,10 @@ public class SistemPaketPengantaran {
         System.out.print("Urutkan berdasarkan ID Paket (1: Kecil ke Besar, 2: Besar ke Kecil): ");
         int pilihan = scanner.nextInt();
         scanner.nextLine(); // Clear buffer
-
+    
         if (pilihan == 1) {
             // Urutkan kecil ke besar
-            Collections.sort(daftarPaket, Comparator.comparingInt(paket -> paket.idPaket));
+            Collections.sort(daftarPaket, (p1, p2) -> Integer.compare(p1.idPaket, p2.idPaket));
             System.out.println("\nData paket diurutkan dari ID terkecil ke terbesar.");
         } else if (pilihan == 2) {
             // Urutkan besar ke kecil
